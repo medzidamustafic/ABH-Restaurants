@@ -51,8 +51,7 @@ RSpec.describe 'Smoke test', type: :feature do
         find(:id, 'password').set('Internship123')
         find(:id, 'confirm').set('Internship123')
         find(:id, 'submitRegister').click
-        #expect(page).to have_content('Account is created successfully!')
-        expect(page).to have_content('User with that email exists!!!')
+        expect(page).to have_content('Account is created successfully!')
         find_link('Login', href: '/login').click
         find(:id, 'username').set('mustafic_m@yahoo.com')
         find(:id, 'password').set('Internship123')
