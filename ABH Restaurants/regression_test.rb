@@ -29,7 +29,6 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'password').set('Hugolina1')
     find(:id, 'submitLogin').click
     expect(page).to have_content('Successfully logged in!')
-    sleep(3)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
     fill_in "Location, Restaurant or Cousine", with: 'Mrvica' 
     click_on 'Find a table'
@@ -70,20 +69,14 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=Mrvica')
     find_link('About', href:'#about_res').click
     expect(page).to have_xpath('//*[@id="gmap_canvas"]')
-    sleep(3)
     expect(page).to have_xpath('//*[@id="description"]')
-    sleep(2)
     find_link('Menu', href:'#menu_meals').click
-    sleep(3)
     expect(page).to have_css('.breakfast')
     find('.lunchButton').click
-    sleep(3)
     expect(page).to have_css('.lunch')
     find('.dinnerButton').click
-    sleep(2)
     expect(page).to have_css('.dinner')
     find_link('Photos', href:'#restaurant_photos').click
-    sleep(2)
     expect(page).to have_content('Restaurant photo')
   end
 
@@ -128,7 +121,6 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'confirm').set('Internship1')
     find(:id, 'submitRegister').click
     expect(page).to have_content('User with that email exists!!!')
-    sleep(3)
   end
 
   it 'search Restaurants page'  do
@@ -154,17 +146,14 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'username').set('denana84@gmail.com')
     find(:id, 'password').set('Internship123')
     find(:id, 'submitLogin').click
-    sleep(3)
     expect(page).to have_content("Account doesn't exist!")
     find(:id, 'username').set('medzidamustaficgmail.com')
     find(:id, 'password').set('Hugolina1')
     find(:id, 'submitLogin').click
-    sleep(3)
     expect(page).to have_content('Wrong email or password!')
     find(:id, 'username').set('medzidamustafic@gmail.com')
     find(:id, 'password').set('12345')
     find(:id, 'submitLogin').click
-    sleep(3)
     expect(page).to have_content('Wrong email or password!')
   end
 
@@ -182,20 +171,16 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'password').set('Internship123')
     find(:id, 'confirm').set('Internship123')
     find(:id, 'submitRegister').click
-    sleep(2)
     expect(page).to have_content('Invalid email format entered!')
-    sleep(3)
     find(:id, 'email').set('denana_p@gmail.com')
     find(:id, 'password').set('Internship')
     find(:id, 'confirm').set('Internship')
     find(:id, 'submitRegister').click
     expect(page).to have_content('Password must contain at least one upper case letter, one lower case letter and one number!')
-    sleep(3)
     find(:id, 'email').set('denana84@gmail.com')
     find(:id, 'password').set('Internship123')
     find(:id, 'confirm').set('Intern12')
     find(:id, 'submitRegister').click
-    sleep(3)
     expect(page).to have_content('Different passwords entered!')
   end
 
@@ -212,7 +197,6 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'password').set('Hugolina1')
     find(:id, 'submitLogin').click
     expect(page).to have_content('Successfully logged in!')
-    sleep(3)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
     fill_in "Location, Restaurant or Cousine", with: 'Apetit' 
     click_on 'Find a table'
@@ -223,26 +207,21 @@ RSpec.describe 'Regression test', type: :feature do
     find(:xpath, '/html/body/div[4]/div/div[1]/span[1]').click
     find('#reviewText').set('Bad location!')
     find('.saveReview').click
-    sleep(3)
     page.execute_script("window.location.reload()")
     expect(page).to have_content('Your review: 1/5')
     find(:id, 'ratePlace').click
     expect(page).to have_content('You already rated this restaurant')
-    sleep(3)
   end
   
   it 'Specials gallery' do
     execute_script("arguments[0].scrollIntoView();", page.find('#specials', visible: false))
     expect(page).to have_content('Specials')
     expect(page).to have_xpath('//*[@id="imgClickAndChange"]')
-    sleep(3)
     find(:id, 'rightArrow').click
     #expect(page.find('#imgClickAndChange')['src']).to have_content '/assets/images/dessert_image.jpg' 
     expect(page).to have_content('Choco pancakes')
-    sleep(3)
     find(:id, 'leftArrow').click
     #expect(page.find('#imgClickAndChange')['src']).to have_content '/assets/images/Pizza-capricciosa.jpg' 
     expect(page).to have_content('Best pizza of 2016')
-    sleep(3)
   end
 end
