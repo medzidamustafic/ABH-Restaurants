@@ -42,7 +42,7 @@ Test script contains following test cases:
             
         Capybara requires Ruby 2.3.0 or later. 
 
-        To install, add this line to `Gemfile` and run `bundle install`:  `gem 'capybara'`
+        To install, add this line to `Gemfile` and run `bundle install`:  `gem 'capybara'`, 'regression_test.rb'
 
         In the application:
 
