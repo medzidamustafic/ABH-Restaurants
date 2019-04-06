@@ -2,13 +2,12 @@
 https://abh-restaurants-frontend.herokuapp.com
 ## Resources:
 
-    https://abh-restaurants-frontend.herokuapp.com
 
     Project management tool: Trello
 
     Trello boards: https://trello.com/b/JPIKzeia/testing-internship-3-q12019
     
-                  https://trello.com/b/B0AfO376/development-internship-1-q12019
+                   https://trello.com/b/B0AfO376/development-internship-1-q12019
     
 ## Description
 
