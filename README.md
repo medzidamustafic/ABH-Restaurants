@@ -12,9 +12,9 @@ https://abh-restaurants-frontend.herokuapp.com
     
 ## Description
 
-In this repository Smoke test for ABH Restaurants App is automated using test automation tools described in Environment setup section.
+In this repository Smoke test and Regression tests for ABH Restaurants App are automated using test automation tools described in Environment setup section.
 
-Test script contains following test cases: 
+Smoke Test script contains following test cases: 
 
     - User can open landing page and search for the restaurant 
     - User is able to create an account
