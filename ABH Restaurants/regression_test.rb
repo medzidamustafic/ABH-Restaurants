@@ -45,9 +45,7 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_xpath('//*[@id="tablesLeft"]')
     find_button('Reserve now').click
     expect(page).to have_content('Reservation successfully completed!')
-    sleep(3)
     page.execute_script("window.location.reload()")
-    sleep(2)
     expect(page).to have_xpath('//*[@id="reservedYet"]')
     find(:id, 'country').set('7')
     find(:id, 'datepicker').set('04/23/2019')
@@ -116,7 +114,6 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_content('Successfully logged in!')
     sleep(3)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
-    sleep(2)
     find_link('Log out', href: '/login').click
     sleep(2)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
@@ -213,14 +210,11 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'ratePlace').click
     find(:xpath, '/html/body/div[4]/div/div[1]/span[1]').click
     find('#reviewText').set('Bad location!')
-    sleep(1)
     find('.saveReview').click
-    sleep(2)
     page.execute_script("window.location.reload()")
     expect(page).to have_xpath('//*[@id="ratedYet"]')
     find(:id, 'ratePlace').click
     expect(page).to have_content('You already rated this restaurant')
-    sleep(2)
   end
   
   it 'view Specials gallery' do
@@ -228,27 +222,21 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_content('Specials')
     expect(page).to have_xpath('//*[@id="imgClickAndChange"]')
     find(:id, 'rightArrow').click
-    sleep(2)
     #expect(page.find('#imgClickAndChange')['src']).to have_content '/assets/images/dessert_image.jpg' 
     expect(page).to have_content('Choco pancakes')
-    sleep(2)
     find(:id, 'leftArrow').click
-    sleep(2)
     #expect(page.find('#imgClickAndChange')['src']).to have_content '/assets/images/Pizza-capricciosa.jpg' 
     expect(page).to have_content('Best pizza of 2016')
-    sleep(2)
   end
 
   it 'filter restaurants' do
     find_link('Restaurants', href: '/restaurants/search').click
     find(:id, 'searchQuery').set('Sarajevo')
     click_on 'Find a table'
-    sleep(2)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/search?query=Sarajevo')
     find('.selectBox').click
     find(:xpath, '//*[@id="checkboxes"]/label[1]/input').check
     click_on 'Find a table'
-    sleep(2)
     within('#row1') do
       expect(page).to have_content('Sendi')
       expect(page).to have_content('Kimono')  
