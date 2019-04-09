@@ -61,9 +61,7 @@ RSpec.describe 'Smoke test', type: :feature do
         expect(page).to have_xpath('//*[@id="tablesLeft"]')
         find_button('Reserve now').click
         expect(page).to have_content('Reservation successfully completed!')
-        sleep(3)
         page.execute_script("window.location.reload()")
-        sleep(2)
         expect(page).to have_xpath('//*[@id="reservedYet"]')
         find_link('Log out', href: '/login').click
         expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
