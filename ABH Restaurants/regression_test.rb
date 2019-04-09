@@ -13,34 +13,46 @@ RSpec.describe 'Regression test', type: :feature do
     visit 'https://abh-restaurants-frontend.herokuapp.com/'
   end
 
-  it 'find free tables before and after login' do
+  it 'find free tables/reserve tables' do
     fill_in "Location, Restaurant or Cousine", with: 'Mrvica' 
     click_on 'Find a table'
     expect(page).to have_xpath('//*[@id="row1"]/div')
     click_on 'Reserve now'
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=Mrvica')
-    find(:id, 'country').click
-    find(:xpath, '//*[@id="country"]/option[2]').click
-    click_on 'Find a table'
-    expect(page).to have_content("You haven't reserved any tables yet.")
+    find(:id, 'country').set('3')
+    find(:id, 'datepicker').set('04/21/2019')
+    find(:id, 'find').click
     expect(page).to have_content('Please log in to proceed!')
+    expect(page).to have_xpath('//*[@id="reservationQuery"]')
     find_link('Log in', href: '/login').click
     find(:id, 'username').set('medzidamustafic@gmail.com')
     find(:id, 'password').set('Hugolina1')
     find(:id, 'submitLogin').click
     expect(page).to have_content('Successfully logged in!')
+    sleep(3)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
     fill_in "Location, Restaurant or Cousine", with: 'Mrvica' 
     click_on 'Find a table'
     expect(page).to have_xpath('//*[@id="row1"]/div')
     click_on 'Reserve now'
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=Mrvica')
-    expect(page).to have_content("You haven't reserved any tables yet.")
-    find(:id, 'country').click
-    find(:xpath, '//*[@id="country"]/option[2]').click
-    click_on 'Find a table'
+    expect(page).to have_xpath('//*[@id="ratedYet"]')
+    expect(page).to have_xpath('//*[@id="reservedYet"]')
+    find(:id, 'country').set('6')
+    find(:id, 'datepicker').set('04/21/2019')
+    find(:id, 'find').click
     expect(page).to have_xpath('//*[@id="reservationQuery"]')
     expect(page).to have_xpath('//*[@id="tablesLeft"]')
+    find_button('Reserve now').click
+    expect(page).to have_content('Reservation successfully completed!')
+    sleep(3)
+    page.execute_script("window.location.reload()")
+    sleep(2)
+    expect(page).to have_xpath('//*[@id="reservedYet"]')
+    find(:id, 'country').set('7')
+    find(:id, 'datepicker').set('04/23/2019')
+    find(:id, 'find').click
+    #expect(page).to have_content('You already made a reservation for this table!')
   end
 
   it 'search Restaurants page'  do
@@ -80,12 +92,12 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_content('Restaurant photo')
   end
 
-  it 'create account, log in/out' do
+  it 'create account; log in/out' do
     find_link('Log in', href: '/login').click
     find_link('Create Account', href: '/register').click
     find(:id, 'name').set('Hana')
     find(:id, 'last_name').set('Mustafic')
-    find(:id, 'email').set('mustafic_m@yahoo.com')
+    find(:id, 'email').set('haannaa_mustafic@gmail.com')
     find(:id, 'phone_num').set('38762322650')
     find(:id, 'country').click
     find('.selectCountry option[value="1"]').select_option
@@ -94,19 +106,23 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'password').set('Internship123')
     find(:id, 'confirm').set('Internship123')
     find(:id, 'submitRegister').click
-    #expect(page).to have_content('Account is created successfully!')
-    find_link('Login', href: '/login').click
-    find(:id, 'username').set('mustafic_m@yahoo.com')
+    expect(page).to have_content('Account successfully created!')
+    sleep(3)
+    expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
+    sleep(2)
+    find(:id, 'username').set('haannaa_mustafic@gmail.com')
     find(:id, 'password').set('Internship123')
     find(:id, 'submitLogin').click
     expect(page).to have_content('Successfully logged in!')
     sleep(3)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
+    sleep(2)
     find_link('Log out', href: '/login').click
+    sleep(2)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
   end
 
-  it 'User cannot crate more than one account with the same email' do
+  it 'user cannot crate more than one account with the same email' do
     find_link('Log in', href: '/login').click
     find_link('Create Account', href: '/register').click
     find(:id, 'name').set('Hana')
@@ -123,25 +139,7 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_content('User with that email exists!!!')
   end
 
-  it 'search Restaurants page'  do
-    find_link('Restaurants', href: '/restaurants/search').click
-    find(:id, 'searchQuery').set('Sarajevo')
-    click_on 'Find a table'
-    expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/search?query=Sarajevo')
-    within('#columns') do
-        expect(page).to have_xpath('//*[@id="row1"]')
-        expect(page).to have_xpath('//*[@id="row2"]')
-        expect(page).to have_xpath('//*[@id="row3"]')
-        within('#row1') do
-            expect(page).to have_xpath('//*[@id="row1"]/div[1]')
-            expect(page).to have_xpath('//*[@id="row1"]/div[2]')
-            expect(page).to have_xpath('//*[@id="row1"]/div[3]')
-        end 
-    end
-    expect(page).to have_css('.pageNumbers')
-  end
-
-  it 'Disabled login with invalid data' do
+  it 'disabled login with invalid data' do
     find_link('Log in', href: '/login').click
     find(:id, 'username').set('denana84@gmail.com')
     find(:id, 'password').set('Internship123')
@@ -157,7 +155,7 @@ RSpec.describe 'Regression test', type: :feature do
     expect(page).to have_content('Wrong email or password!')
   end
 
-  it 'create account with invalid data, password confirmation' do
+  it 'create account with invalid data/password confirmation' do
     find_link('Log in', href: '/login').click
     find_link('Create Account', href: '/register').click
     find(:id, 'name').set('Dzenana')
@@ -182,6 +180,14 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'confirm').set('Intern12')
     find(:id, 'submitRegister').click
     expect(page).to have_content('Different passwords entered!')
+    find(:id, 'name').set('Dzenana23$%&')
+    find(:id, 'confirm').set('Internship123')
+    find(:id, 'submitRegister').click
+    expect(page).to have_content('Invalid name entered!')
+    find(:id, 'name').set('Dzenana')
+    find(:id, 'last_name').set('Pozderac$%&/')
+    find(:id, 'submitRegister').click
+    expect(page).to have_content('Invalid last name entered!')
   end
 
   it 'rate the restaurant when logged in/out' do
@@ -193,35 +199,59 @@ RSpec.describe 'Regression test', type: :feature do
     find(:id, 'ratePlace').click
     expect(page).to have_content('Please log in to proceed!')
     find_link('Log in', href: '/login').click
-    find(:id, 'username').set('medzidamustafic@gmail.com')
-    find(:id, 'password').set('Hugolina1')
+    find(:id, 'username').set('hn_mmusttafiic@yahoo.com')
+    find(:id, 'password').set('Internship123')
     find(:id, 'submitLogin').click
     expect(page).to have_content('Successfully logged in!')
+    sleep(4)
     expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
-    fill_in "Location, Restaurant or Cousine", with: 'Apetit' 
+    fill_in "Location, Restaurant or Cousine", with: 'Plaža' 
     click_on 'Find a table'
     expect(page).to have_xpath('//*[@id="row1"]/div')
     click_on 'Reserve now'
-    expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=Apetit')
+    expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=Plaža')
     find(:id, 'ratePlace').click
     find(:xpath, '/html/body/div[4]/div/div[1]/span[1]').click
     find('#reviewText').set('Bad location!')
+    sleep(1)
     find('.saveReview').click
+    sleep(2)
     page.execute_script("window.location.reload()")
-    expect(page).to have_content('Your review: 1/5')
+    expect(page).to have_xpath('//*[@id="ratedYet"]')
     find(:id, 'ratePlace').click
     expect(page).to have_content('You already rated this restaurant')
+    sleep(2)
   end
   
-  it 'Specials gallery' do
+  it 'view Specials gallery' do
     execute_script("arguments[0].scrollIntoView();", page.find('#specials', visible: false))
     expect(page).to have_content('Specials')
     expect(page).to have_xpath('//*[@id="imgClickAndChange"]')
     find(:id, 'rightArrow').click
+    sleep(2)
     #expect(page.find('#imgClickAndChange')['src']).to have_content '/assets/images/dessert_image.jpg' 
     expect(page).to have_content('Choco pancakes')
+    sleep(2)
     find(:id, 'leftArrow').click
+    sleep(2)
     #expect(page.find('#imgClickAndChange')['src']).to have_content '/assets/images/Pizza-capricciosa.jpg' 
     expect(page).to have_content('Best pizza of 2016')
+    sleep(2)
+  end
+
+  it 'filter restaurants' do
+    find_link('Restaurants', href: '/restaurants/search').click
+    find(:id, 'searchQuery').set('Sarajevo')
+    click_on 'Find a table'
+    sleep(2)
+    expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/search?query=Sarajevo')
+    find('.selectBox').click
+    find(:xpath, '//*[@id="checkboxes"]/label[1]/input').check
+    click_on 'Find a table'
+    sleep(2)
+    within('#row1') do
+      expect(page).to have_content('Sendi')
+      expect(page).to have_content('Kimono')  
+    end 
   end
 end

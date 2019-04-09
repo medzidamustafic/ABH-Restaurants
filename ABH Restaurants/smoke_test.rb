@@ -13,12 +13,61 @@ RSpec.describe 'Smoke test', type: :feature do
     visit 'https://abh-restaurants-frontend.herokuapp.com/'
   end
 
+    it 'create account; log in/out' do
+        find_link('Log in', href: '/login').click
+        find_link('Create Account', href: '/register').click
+        find(:id, 'name').set('Hana')
+        find(:id, 'last_name').set('Mustafic')
+        find(:id, 'email').set('hn_mmusttafiic@yahoo.com')
+        find(:id, 'phone_num').set('38762322650')
+        find(:id, 'country').click
+        find('.selectCountry option[value="1"]').select_option
+        find(:id, 'city').click
+        find('.selectCity option[value="1"]').select_option
+        find(:id, 'password').set('Internship123')
+        find(:id, 'confirm').set('Internship123')
+        find(:id, 'submitRegister').click
+        expect(page).to have_content('Account successfully created!')
+        sleep(4)
+        find(:id, 'username').set('hn_mmusttafiic@yahoo.com')
+        find(:id, 'password').set('Internship123')
+        find(:id, 'submitLogin').click
+        expect(page).to have_content('Successfully logged in!')
+        sleep(3)
+        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
+        find_link('Log out', href: '/login').click
+        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
+    end
+
     it 'search restaurant and reserve a table'  do
-        fill_in "Location, Restaurant or Cousine", with: 'One Bis' 
+        find_link('Log in', href: '/login').click
+        find(:id, 'username').set('h_mmusttafiic@yahoo.com')
+        find(:id, 'password').set('Internship123')
+        find(:id, 'submitLogin').click
+        expect(page).to have_content('Successfully logged in!')
+        sleep(3)
+        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
+        fill_in "Location, Restaurant or Cousine", with: 'Mrvica' 
         click_on 'Find a table'
         expect(page).to have_xpath('//*[@id="row1"]/div')
         click_on 'Reserve now'
-        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=One%20Bis')
+        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/restaurants/singlePage?name=Mrvica')
+        expect(page).to have_xpath('//*[@id="ratedYet"]')
+        expect(page).to have_xpath('//*[@id="reservedYet"]')
+        find(:id, 'country').set('6')
+        find(:id, 'datepicker').set('04/28/2019')
+        find(:id, 'find').click
+        expect(page).to have_xpath('//*[@id="reservationQuery"]')
+        expect(page).to have_xpath('//*[@id="tablesLeft"]')
+        find_button('Reserve now').click
+        expect(page).to have_content('Reservation successfully completed!')
+        sleep(3)
+        page.execute_script("window.location.reload()")
+        sleep(2)
+        expect(page).to have_xpath('//*[@id="reservedYet"]')
+        find_link('Log out', href: '/login').click
+        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
+        
     end
     it 'search Restaurants page'  do
         find_link('Restaurants', href: '/restaurants/search').click
@@ -36,30 +85,6 @@ RSpec.describe 'Smoke test', type: :feature do
             end 
         end
         expect(page).to have_css('.pageNumbers')
-    end
-    it 'create account, log in/out' do
-        find_link('Log in', href: '/login').click
-        find_link('Create Account', href: '/register').click
-        find(:id, 'name').set('Hana')
-        find(:id, 'last_name').set('Mustafic')
-        find(:id, 'email').set('mustafic_m@yahoo.com')
-        find(:id, 'phone_num').set('38762322650')
-        find(:id, 'country').click
-        find('.selectCountry option[value="1"]').select_option
-        find(:id, 'city').click
-        find('.selectCity option[value="1"]').select_option
-        find(:id, 'password').set('Internship123')
-        find(:id, 'confirm').set('Internship123')
-        find(:id, 'submitRegister').click
-        expect(page).to have_content('Account is created successfully!')
-        find_link('Login', href: '/login').click
-        find(:id, 'username').set('mustafic_m@yahoo.com')
-        find(:id, 'password').set('Internship123')
-        find(:id, 'submitLogin').click
-        expect(page).to have_content('Successfully logged in!')
-        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/home')
-        find_link('Log out', href: '/login').click
-        expect(page).to have_current_path('https://abh-restaurants-frontend.herokuapp.com/login')
     end
 
 end    
